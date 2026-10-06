@@ -1,0 +1,62 @@
+:root{--bg:#F6F4EE;--ink:#111;--ink2:#333;--mid:#777;--sand:#BEB8AD;--soft:#E6E1D7;--card:#FBFAF6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15140f;--ink:#F1EDE4;--ink2:#D5D0C6;--mid:#8d887d;--sand:#4a463e;--soft:#25231d;--card:#1b1a15}}
+:root[data-theme="dark"]{--bg:#15140f;--ink:#F1EDE4;--ink2:#D5D0C6;--mid:#8d887d;--sand:#4a463e;--soft:#25231d;--card:#1b1a15}
+*,*::before,*::after{box-sizing:border-box;transition:background-color .5s ease,color .5s ease,border-color .5s ease}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 60px)}
+body{margin:0;background:var(--bg);color:var(--ink2);font:17px/1.75 "Zen Kaku Gothic New","Jost",system-ui,sans-serif}
+.w{max-width:880px;margin:0 auto;padding:0 22px}
+.lb{font:500 11px/1 "Jost",system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--mid)}
+header{padding:56px 0 28px;display:grid;gap:28px;grid-template-columns:1.4fr 1fr;align-items:end}
+h1{font:500 clamp(36px,7vw,60px)/1.08 "Jost",system-ui,sans-serif;color:var(--ink);margin:12px 0 14px;letter-spacing:.01em}
+header p{margin:0;max-width:44ch}
+header ul{margin:10px 0 0;padding:0;list-style:none;font-size:15px}
+header li::before{content:"・";color:var(--mid)}
+.rule{width:44px;border:0;border-top:1.5px solid var(--ink);margin:18px 0 0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-top:1px solid var(--sand);border-bottom:1px solid var(--sand)}
+nav .w{display:flex;gap:8px;overflow-x:auto;padding-top:10px;padding-bottom:10px}
+nav a,.pill{white-space:nowrap;font:400 13px "Jost",system-ui,sans-serif;color:var(--ink);text-decoration:none;padding:3px 14px;border:1px solid var(--sand);border-radius:99px}
+nav a:hover,nav a:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+#tema{margin-left:auto;flex-shrink:0;cursor:pointer;white-space:nowrap;font:400 13px "Jost",system-ui,sans-serif;padding:3px 14px;border:1px solid var(--ink);border-radius:99px;background:var(--ink);color:var(--bg)}
+#tema:hover,#tema:focus-visible{background:var(--bg);color:var(--ink);outline:none}
+section{padding:56px 0 8px;border-bottom:1px solid var(--sand)}
+h2{font:500 clamp(28px,5vw,38px)/1.1 "Jost",system-ui,sans-serif;color:var(--ink);margin:10px 0 14px}
+h3{margin:34px 0 10px;font:500 11px/1 "Jost",system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:12px}
+h3::after{content:"";flex:1;border-top:1px solid var(--sand)}
+p{margin:0 0 14px;max-width:66ch}
+b{color:var(--ink);font-weight:500}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+pre{margin:12px 0 18px;padding:16px 18px;background:var(--card);border:1px solid var(--sand);border-radius:10px;overflow-x:auto;font:400 13.5px/1.6 "JetBrains Mono",ui-monospace,monospace;color:var(--ink)}
+code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.85em;background:var(--soft);padding:1px 6px;border-radius:4px;color:var(--ink)}
+pre code{background:none;padding:0;font-size:inherit}
+.tw{overflow-x:auto;margin:12px 0 18px}
+table{border-collapse:collapse;width:100%;min-width:440px;font-size:15px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--sand)}
+th{font:500 11px "Jost",system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mid)}
+ul.err{margin:0 0 16px;padding-left:20px;max-width:66ch}
+ul.err li{margin-bottom:6px}
+.g{margin:14px 0 20px;display:grid;gap:10px}
+.g div{display:grid;grid-template-columns:92px 1fr 96px;gap:12px;align-items:center;font:400 13px "Jost",system-ui,sans-serif}
+.g i{display:block;height:12px;border:1px solid var(--ink);border-radius:99px;position:relative;overflow:hidden}
+.g i::before{content:"";position:absolute;inset:0;width:var(--w);background:var(--ink)}
+.g span:last-child{color:var(--mid);text-align:right}
+details{border:1px solid var(--sand);border-radius:10px;margin:10px 0;background:var(--card)}
+summary{cursor:pointer;padding:13px 18px;color:var(--ink);list-style:none;display:flex;gap:12px}
+summary::before{content:"+";font:400 18px/1.4 "Jost",sans-serif;color:var(--mid);width:12px}
+details[open] summary::before{content:"−"}
+summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+details>div{padding:2px 18px 6px;border-top:1px dashed var(--sand)}
+.bb{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 10px}
+.bb span{min-width:46px;text-align:center;padding:9px 0;border:1px solid var(--ink);border-radius:8px;font:400 14px "JetBrains Mono",monospace;color:var(--ink)}
+.bb .off{opacity:.25;border-style:dashed}
+.bb .mid{background:var(--ink);color:var(--bg)}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctl input,.ctl button{font:400 14px "Jost",sans-serif;padding:7px 14px;border:1px solid var(--ink);border-radius:99px;background:var(--bg);color:var(--ink)}
+.ctl input{width:92px}
+.ctl button{cursor:pointer}
+.ctl button:hover,.ctl button:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+#bbm{margin:12px 0 0;color:var(--mid);font-size:15px;min-height:1.8em}
+footer{padding:36px 0 56px;color:var(--mid);font-size:14px}
+.pal{display:flex;gap:10px;margin-top:14px}
+.pal i{width:20px;height:20px;border-radius:50%;border:1px solid var(--sand)}
+@media(max-width:680px){header{grid-template-columns:1fr}.g div{grid-template-columns:70px 1fr 74px;gap:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none}}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estrutura de Dados II · Revisão completa</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="w">
+<header>
+<div>
+<span class="lb">Revisão completa · FATEC</span>
+<h1>Estrutura de Dados II</h1>
+<p>Cinco temas, do porquê ao código. Leia a ideia, entenda o passo a passo, depois tente os exercícios antes de abrir a resposta.</p>
+<hr class="rule">
+</div>
+<div>
+<span class="lb">Como estudar</span>
+<ul><li>Entenda a ideia antes do código.</li><li>Rode os exemplos no Python.</li><li>Resolva sem olhar a resposta.</li></ul>
+</div>
+</header>
+</div>
+<nav><div class="w">
+<a href="#complexidade">Complexidade</a><a href="#sequencial">Busca sequencial</a><a href="#binaria">Busca binária</a><a href="#pilhas">Pilhas</a><a href="#listas">Listas encadeadas</a><button id="tema" type="button">Modo escuro</button>
+</div></nav>
+<main class="w">
+
+<section id="complexidade">
+<span class="lb">Tema 1</span>
+<h2>Complexidade de algoritmos</h2>
+<div class="tags"><span class="pill">Big O</span><span class="pill">pior caso</span><span class="pill">tempo e espaço</span></div>
+<p>Medir um algoritmo em segundos depende do computador. Por isso contamos <b>operações em função de n</b>, o tamanho da entrada. A pergunta é: quando n cresce, o custo cresce como?</p>
+<p>Big O descreve o limite superior de crescimento. Três regras resolvem a maioria dos casos: <b>descarte constantes</b> (2n vira n), <b>mantenha o termo dominante</b> (n² + n vira n²) e lembre que <b>laços em sequência somam, laços aninhados multiplicam</b>.</p>
+<h3>Operações para n = 1.000 (escala logarítmica)</h3>
+<div class="g">
+<div><span>O(1)</span><i style="--w:3%"></i><span>1</span></div>
+<div><span>O(log n)</span><i style="--w:17%"></i><span>10</span></div>
+<div><span>O(n)</span><i style="--w:50%"></i><span>1.000</span></div>
+<div><span>O(n log n)</span><i style="--w:67%"></i><span>10.000</span></div>
+<div><span>O(n²)</span><i style="--w:100%"></i><span>1.000.000</span></div>
+</div>
+<h3>Código</h3>
+<pre><code>def soma(v):                 # O(n) tempo, O(1) espaço
+    total = 0
+    for x in v:
+        total += x
+    return total
+
+def tem_duplicado(v):        # O(n²) tempo
+    for i in range(len(v)):
+        for j in range(i + 1, len(v)):
+            if v[i] == v[j]:
+                return True
+    return False
+
+def passos_ate_um(n):        # O(log n): n cai pela metade
+    c = 0
+    while n &gt; 1:
+        n //= 2
+        c += 1
+    return c</code></pre>
+<p>Espaço segue a mesma lógica: <code>soma</code> usa memória constante; criar uma cópia da lista usaria O(n). Também vale separar <b>melhor, médio e pior caso</b>: Big O costuma falar do pior.</p>
+<h3>Erros comuns</h3>
+<ul class="err"><li>Achar que <code>x in lista</code> é O(1). É uma busca sequencial, O(n). Em <code>set</code> e <code>dict</code> é O(1) em média.</li><li>Esquecer que fatiar (<code>v[1:]</code>) copia a lista e custa O(n).</li><li>Tratar O(n) como "n segundos". É só a forma do crescimento.</li></ul>
+<h3>Exercícios</h3>
+<details><summary>Dois laços <code>for</code> em sequência, cada um até n. Qual a complexidade?</summary><div><p><b>O(n).</b> n + n = 2n, e a constante some.</p></div></details>
+<details><summary>Qual a complexidade de <code>for i in range(n): for j in range(i): ...</code>?</summary><div><p><b>O(n²).</b> O laço interno roda 0 + 1 + … + (n−1) = n(n−1)/2 vezes. O termo dominante é n²/2, e a constante ½ é descartada.</p></div></details>
+<details><summary>Se n dobra, quanto cresce o tempo de O(n), O(n²) e O(log n)?</summary><div><p>O(n) dobra. O(n²) fica 4 vezes maior, porque (2n)² = 4n². O(log n) ganha apenas um passo extra.</p></div></details>
+</section>
+
+<section id="sequencial">
+<span class="lb">Tema 2</span>
+<h2>Vetores não ordenados e busca sequencial</h2>
+<div class="tags"><span class="pill">varredura linear</span><span class="pill">sem pré-requisito</span><span class="pill">O(n)</span></div>
+<p>Sem nenhuma ordem, não há atalho: o único jeito de saber que um valor não existe é olhar todos os elementos. A busca sequencial compara um a um e para no primeiro acerto.</p>
+<h3>Passo a passo</h3>
+<p>Em <code>v = [7, 3, 9, 3]</code> buscando <code>9</code>: compara com 7 (não), com 3 (não), com 9 (sim) e devolve a posição 2, depois de 3 comparações. Buscando <code>5</code>, faria as 4 comparações e devolveria -1.</p>
+<pre><code>def busca_sequencial(v, alvo):
+    for i in range(len(v)):
+        if v[i] == alvo:
+            return i
+    return -1
+
+# em Python, já existe:
+v.index(alvo)      # levanta ValueError se não achar
+alvo in v          # True ou False</code></pre>
+<div class="tw"><table>
+<tr><th>Caso</th><th>Quando acontece</th><th>Custo</th></tr>
+<tr><td>Melhor</td><td>alvo na primeira posição</td><td>O(1)</td></tr>
+<tr><td>Médio</td><td>alvo no meio, em média n/2 comparações</td><td>O(n)</td></tr>
+<tr><td>Pior</td><td>alvo no fim ou ausente</td><td>O(n)</td></tr>
+</table></div>
+<p>Quando usar: lista pequena, dados que mudam o tempo todo (manter ordenado custaria caro) ou uma única consulta. Para muitas consultas sobre dados estáveis, ordenar ou usar <code>dict</code>/<code>set</code> compensa.</p>
+<h3>Erros comuns</h3>
+<ul class="err"><li>Devolver <code>0</code> ou <code>False</code> quando não acha. O índice 0 é válido, e <code>if busca(...)</code> trata a posição 0 como falha. Por isso usamos -1.</li><li>Dar <code>return -1</code> dentro do laço, no primeiro elemento diferente. O <code>return -1</code> deve ficar <b>fora</b> do laço.</li></ul>
+<h3>Exercícios</h3>
+<details><summary>Devolva todas as posições em que o alvo aparece.</summary><div><pre><code>def todos_indices(v, alvo):
+    return [i for i, x in enumerate(v) if x == alvo]</code></pre><p>Aqui o vetor é sempre percorrido inteiro, então o custo é O(n) em qualquer caso.</p></div></details>
+<details><summary>Dada uma lista de dicionários, ache o aluno pelo campo <code>ra</code>.</summary><div><pre><code>def achar_aluno(alunos, ra):
+    for a in alunos:
+        if a["ra"] == ra:
+            return a
+    return None</code></pre><p>É a mesma ideia, devolvendo o registro em vez da posição. Em análise de dados isso aparece o tempo todo, e é onde um <code>dict</code> indexado por <code>ra</code> viraria O(1).</p></div></details>
+<details><summary>Quantas comparações, no pior caso, em um vetor de 500 elementos?</summary><div><p><b>500.</b> O alvo está na última posição ou não existe.</p></div></details>
+</section>
+
+<section id="binaria">
+<span class="lb">Tema 3</span>
+<h2>Vetores ordenados e busca binária</h2>
+<div class="tags"><span class="pill">dividir pela metade</span><span class="pill">exige ordem</span><span class="pill">O(log n)</span><span class="pill">bisect</span></div>
+<p>É o jogo de adivinhar um número de 1 a 100: você chuta 50, ouve "maior" e descarta metade das opções. Em um vetor <b>ordenado</b>, comparar com o elemento do meio elimina metade do que resta a cada passo, e 1 milhão de elementos cabem em cerca de 20 passos.</p>
+<h3>Veja funcionando</h3>
+<div class="ctl"><input id="alvo" type="number" value="61" aria-label="Valor buscado"><button id="b1">Próximo passo</button><button id="b2">Reiniciar</button></div>
+<div class="bb" id="bb"></div>
+<p id="bbm"></p>
+<h3>Código</h3>
+<pre><code>def busca_binaria(v, alvo):
+    esq, dir = 0, len(v) - 1
+    while esq &lt;= dir:
+        meio = (esq + dir) // 2
+        if v[meio] == alvo:
+            return meio
+        if v[meio] &lt; alvo:
+            esq = meio + 1      # alvo só pode estar à direita
+        else:
+            dir = meio - 1      # alvo só pode estar à esquerda
+    return -1</code></pre>
+<p>A ideia que mantém tudo correto é o <b>invariante</b>: se o alvo existe, ele está entre <code>esq</code> e <code>dir</code>. Cada passo preserva isso e encolhe o intervalo, até achar ou esvaziar (<code>esq &gt; dir</code>).</p>
+<h3>Com o módulo bisect</h3>
+<pre><code>from bisect import bisect_left, bisect_right, insort
+
+v = [2, 5, 8, 8, 12, 20]
+bisect_left(v, 8)      # 2  (primeira posição possível)
+bisect_right(v, 8)     # 4  (depois do último 8)
+insort(v, 10)          # insere mantendo a ordem</code></pre>
+<p><code>bisect</code> devolve onde o valor <i>entraria</i>, então para checar existência confira <code>i &lt; len(v) and v[i] == alvo</code>. Note que <code>insort</code> acha o lugar em O(log n), mas inserir em lista ainda desloca elementos: O(n).</p>
+<h3>Erros comuns</h3>
+<ul class="err"><li>Usar em vetor desordenado: a resposta pode ser errada sem nenhum erro aparente.</li><li>Trocar <code>esq &lt;= dir</code> por <code>esq &lt; dir</code> e perder o caso de um único elemento restante.</li><li>Esquecer o <code>+1</code> e o <code>-1</code> ao mover os limites, o que pode gerar laço infinito.</li><li>Ordenar a cada busca: ordenar custa O(n log n), então só vale ordenar uma vez e buscar muitas.</li></ul>
+<h3>Exercícios</h3>
+<details><summary>Quantas comparações, no máximo, em 1000 elementos?</summary><div><p><b>Cerca de 10.</b> 1000 → 500 → 250 → … → 1 leva ⌊log₂ 1000⌋ + 1 = 10 passos.</p></div></details>
+<details><summary>Escreva a versão recursiva.</summary><div><pre><code>def bb_rec(v, alvo, esq=0, dir=None):
+    if dir is None:
+        dir = len(v) - 1
+    if esq &gt; dir:
+        return -1
+    meio = (esq + dir) // 2
+    if v[meio] == alvo:
+        return meio
+    if v[meio] &lt; alvo:
+        return bb_rec(v, alvo, meio + 1, dir)
+    return bb_rec(v, alvo, esq, meio - 1)</code></pre><p>Mesma lógica, mas a pilha de chamadas ocupa O(log n) de memória, enquanto a iterativa usa O(1).</p></div></details>
+<details><summary>Em <code>[1, 4, 4, 4, 9]</code>, como achar a <i>primeira</i> ocorrência do 4?</summary><div><pre><code>from bisect import bisect_left
+i = bisect_left(v, 4)
+if i &lt; len(v) and v[i] == 4:
+    print(i)    # 1</code></pre><p>A busca binária comum pode cair em qualquer um dos 4. <code>bisect_left</code> sempre devolve o mais à esquerda.</p></div></details>
+</section>
+
+<section id="pilhas">
+<span class="lb">Tema 4</span>
+<h2>Pilhas</h2>
+<div class="tags"><span class="pill">LIFO</span><span class="pill">empilhar · desempilhar</span><span class="pill">estática e dinâmica</span></div>
+<p>O último a entrar é o primeiro a sair (<i>Last In, First Out</i>), como pratos empilhados: só se mexe no de cima. Todas as operações principais são O(1).</p>
+<p>Você usa pilhas sem perceber: o desfazer (Ctrl+Z) do editor, o botão voltar do navegador, as chamadas de função e a recursão (a "pilha de chamadas") e a checagem de parênteses em compiladores.</p>
+<h3>Implementação dinâmica</h3>
+<pre><code>class Pilha:
+    def __init__(self):
+        self.itens = []
+
+    def empilhar(self, x):
+        self.itens.append(x)           # O(1)
+
+    def desempilhar(self):
+        if self.vazia():
+            raise IndexError("pilha vazia")
+        return self.itens.pop()        # O(1)
+
+    def topo(self):
+        return self.itens[-1]
+
+    def vazia(self):
+        return len(self.itens) == 0</code></pre>
+<h3>Implementação estática</h3>
+<pre><code>class PilhaEstatica:
+    def __init__(self, capacidade):
+        self.dados = [None] * capacidade   # tamanho fixo
+        self.n = 0                         # quantos itens
+
+    def empilhar(self, x):
+        if self.n == len(self.dados):
+            raise OverflowError("pilha cheia")
+        self.dados[self.n] = x
+        self.n += 1
+
+    def desempilhar(self):
+        if self.n == 0:
+            raise IndexError("pilha vazia")
+        self.n -= 1
+        return self.dados[self.n]</code></pre>
+<p>A estática reserva a memória de uma vez e pode <b>encher</b> (overflow); a dinâmica cresce conforme a necessidade. Em ambas, tentar desempilhar de uma pilha vazia é <i>underflow</i>.</p>
+<h3>Erros comuns</h3>
+<ul class="err"><li>Não checar vazio antes de <code>desempilhar</code> ou <code>topo</code>.</li><li>Usar <code>pop(0)</code> pensando em "tirar o primeiro": isso é O(n) e é comportamento de fila, não de pilha.</li><li>Na estática, esquecer de decrementar <code>n</code> ao desempilhar.</li></ul>
+<h3>Exercícios</h3>
+<details><summary>Verifique se parênteses, colchetes e chaves estão balanceados.</summary><div><pre><code>def balanceado(texto):
+    p = []
+    pares = {')': '(', ']': '[', '}': '{'}
+    for c in texto:
+        if c in '([{':
+            p.append(c)
+        elif c in pares:
+            if not p or p.pop() != pares[c]:
+                return False
+    return not p</code></pre><p>Abriu: empilha. Fechou: o topo precisa ser o par correspondente. No fim, a pilha tem que estar vazia, senão sobrou algo aberto. Teste com <code>"([)]"</code>, que deve dar False.</p></div></details>
+<details><summary>Avalie uma expressão pós-fixa: <code>"3 4 + 2 *"</code>.</summary><div><pre><code>def posfixa(expr):
+    p = []
+    for t in expr.split():
+        if t in '+-*/':
+            b, a = p.pop(), p.pop()
+            p.append({'+': a + b, '-': a - b,
+                      '*': a * b, '/': a / b}[t])
+        else:
+            p.append(float(t))
+    return p.pop()</code></pre><p>Números vão para a pilha; operador desempilha dois, calcula e empilha o resultado. <code>3 4 +</code> vira 7, e <code>7 2 *</code> dá 14. Repare na ordem: o <i>primeiro</i> desempilhado é o segundo operando (<code>b</code>).</p></div></details>
+<details><summary>Inverta uma string usando uma pilha.</summary><div><pre><code>def inverter(s):
+    p = list(s)
+    return ''.join(p.pop() for _ in s)</code></pre><p>Os caracteres saem na ordem contrária à de entrada, que é a própria definição de LIFO.</p></div></details>
+</section>
+
+<section id="listas">
+<span class="lb">Tema 5</span>
+<h2>Listas encadeadas</h2>
+<div class="tags"><span class="pill">nó + ponteiro</span><span class="pill">inserção no início O(1)</span><span class="pill">sem acesso por índice</span></div>
+<p>Cada elemento (nó) guarda um valor e uma referência para o próximo. Os nós ficam soltos na memória, ligados só por essas referências. Para chegar ao 5º elemento é preciso andar pelos 4 anteriores, mas inserir no início não desloca ninguém.</p>
+<pre><code>início → [10 | •] → [20 | •] → [30 | None]</code></pre>
+<h3>Código</h3>
+<pre><code>class No:
+    def __init__(self, valor):
+        self.valor = valor
+        self.prox = None
+
+class Lista:
+    def __init__(self):
+        self.inicio = None
+
+    def inserir_inicio(self, valor):       # O(1)
+        no = No(valor)
+        no.prox = self.inicio
+        self.inicio = no
+
+    def inserir_fim(self, valor):          # O(n)
+        no = No(valor)
+        if self.inicio is None:
+            self.inicio = no
+            return
+        atual = self.inicio
+        while atual.prox:
+            atual = atual.prox
+        atual.prox = no
+
+    def buscar(self, valor):               # O(n)
+        atual = self.inicio
+        while atual:
+            if atual.valor == valor:
+                return atual
+            atual = atual.prox
+        return None
+
+    def remover(self, valor):              # O(n)
+        atual, ant = self.inicio, None
+        while atual:
+            if atual.valor == valor:
+                if ant:
+                    ant.prox = atual.prox
+                else:
+                    self.inicio = atual.prox
+                return True
+            ant, atual = atual, atual.prox
+        return False</code></pre>
+<p>Em <code>remover</code>, o ponteiro <code>ant</code> é o segredo: para "pular" um nó é preciso alterar o <code>prox</code> do nó anterior. Remover o primeiro é caso especial, pois não há anterior e é o <code>inicio</code> que muda.</p>
+<div class="tw"><table>
+<tr><th>Operação</th><th>Vetor (list)</th><th>Lista encadeada</th></tr>
+<tr><td>Acessar por índice</td><td>O(1)</td><td>O(n)</td></tr>
+<tr><td>Inserir no início</td><td>O(n)</td><td>O(1)</td></tr>
+<tr><td>Inserir no fim</td><td>O(1) amortizado</td><td>O(n), ou O(1) com ponteiro para o fim</td></tr>
+<tr><td>Buscar um valor</td><td>O(n)</td><td>O(n)</td></tr>
+<tr><td>Memória</td><td>só os valores</td><td>valor + ponteiro por nó</td></tr>
+</table></div>
+<h3>Erros comuns</h3>
+<ul class="err"><li>Religar os ponteiros na ordem errada e perder o resto da lista. Guarde <code>prox</code> numa variável antes de alterá-lo.</li><li>Esquecer o caso da lista vazia (<code>inicio is None</code>) e do primeiro nó.</li><li>Laço <code>while atual.prox</code> em lista vazia: <code>atual</code> é <code>None</code> e dá erro de atributo.</li></ul>
+<h3>Exercícios</h3>
+<details><summary>Escreva o método <code>tamanho</code>.</summary><div><pre><code>def tamanho(self):
+    n, atual = 0, self.inicio
+    while atual:
+        n += 1
+        atual = atual.prox
+    return n</code></pre><p>É O(n). Guardando um contador atualizado em cada inserção e remoção, vira O(1).</p></div></details>
+<details><summary>Inverta a lista sem criar uma nova.</summary><div><pre><code>def inverter(self):
+    ant, atual = None, self.inicio
+    while atual:
+        prox = atual.prox       # guarda o próximo
+        atual.prox = ant        # vira a seta
+        ant, atual = atual, prox
+    self.inicio = ant</code></pre><p>Tempo O(n) e memória extra O(1): só as setas mudam de direção.</p></div></details>
+<details><summary>Ache o elemento do meio em uma única passada.</summary><div><pre><code>def meio(self):
+    lento = rapido = self.inicio
+    while rapido and rapido.prox:
+        lento = lento.prox
+        rapido = rapido.prox.prox
+    return lento.valor if lento else None</code></pre><p>O ponteiro rápido anda 2 nós por vez e o lento anda 1. Quando o rápido chega ao fim, o lento está no meio. É a técnica dos dois ponteiros, bem comum em prova e entrevista.</p></div></details>
+</section>
+</main>
+<footer class="w">
+<span class="lb">Revisão de Estrutura de Dados II</span>
+<p style="margin-top:12px">Feita por aluno, para alunos. Confira sempre com os slides e a bibliografia da disciplina.</p>
+<div class="pal"><i style="background:#111"></i><i style="background:#333"></i><i style="background:#777"></i><i style="background:#BEB8AD"></i><i style="background:#E6E1D7"></i></div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
